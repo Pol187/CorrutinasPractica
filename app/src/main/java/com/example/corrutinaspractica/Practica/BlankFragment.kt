@@ -23,7 +23,7 @@ class BlankFragment : Fragment() {
     private val PROGRESS_START = 0
     private val JOB_TIME = 4000 // ms
     private lateinit var job: CompletableJob
-
+    private lateinit var job2:CompletableJob
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -35,6 +35,7 @@ class BlankFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //Barra1
         binding.jobButton.setOnClickListener(){
             if(!::job.isInitialized){
                 iniciar()
@@ -50,6 +51,23 @@ class BlankFragment : Fragment() {
         binding.cancelButton.setOnClickListener(){
             parar()
         }
+
+        //BArra2
+        binding.jobButton2.setOnClickListener{
+            if(!::job2.isInitialized){
+                iniciar2()
+            }
+            binding.jobProgressBar2.startJobOrCancel(job2)
+        }
+        binding.ResetButton2.setOnClickListener{
+            if(::job2.isInitialized){
+                resetJob2()
+            }
+            binding.jobProgressBar2.startJobOrCancel(job)
+        }
+        binding.cancelButton2.setOnClickListener(){
+            parar2()
+        }
     }
 
     private fun parar() {
@@ -59,14 +77,25 @@ class BlankFragment : Fragment() {
 
         }
     }
+    private fun parar2() {
+        if(job2.isActive || job2.isCompleted){
+            job2.cancel(CancellationException("Resetting job"))
+            binding.jobProgressBar2.progress = 0
 
+        }
+    }
     fun resetJob(){
         if(job.isActive || job.isCompleted){
             job.cancel(CancellationException("Resetting job"))
         }
         iniciar()
     }
-
+    fun resetJob2(){
+        if(job2.isActive || job2.isCompleted){
+            job2.cancel(CancellationException("Resetting job"))
+        }
+        iniciar2()
+    }
     fun iniciar(){
         job = Job()
         job.invokeOnCompletion {
@@ -80,6 +109,20 @@ class BlankFragment : Fragment() {
         }
         binding.jobProgressBar.max = PROGRESS_MAX
         binding.jobProgressBar.progress = PROGRESS_START
+    }
+    fun iniciar2(){
+        job2 = Job()
+        job2.invokeOnCompletion {
+            it?.message.let{
+                var msg = it
+                if(msg.isNullOrBlank()){
+                    msg = "Unknown cancellation error."
+                }
+                showToast(msg)
+            }
+        }
+        binding.jobProgressBar2.max = PROGRESS_MAX
+        binding.jobProgressBar2.progress = PROGRESS_START
     }
 
 
