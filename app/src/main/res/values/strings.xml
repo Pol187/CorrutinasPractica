@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">CorrutinasPractica</string>
+    <string name="button">Button</string>
+    <string name="iniciar">Start</string>
+    <string name="pausar">Pause</string>
+    <string name="reanudar">Restart</string>
+    <string name="parar">Stop</string>
+
+</resources>
